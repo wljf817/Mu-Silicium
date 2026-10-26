@@ -98,6 +98,9 @@ READ_LOCK_STATUS   = TRUE
   # IORT DT
   INF QcomPkg/Drivers/IortDtDxe/IortDtDxe.inf
 
+  # ADSP Loader
+  INF annibalePkg/Drivers/AdspLoaderDxe/AdspLoaderDxe.inf
+
   # Device Tree
   #INF EmbeddedPkg/Drivers/DtPlatformDxe/DtPlatformDxe.inf
   #FILE FREEFORM = 25462CDA-221F-47DF-AC1D-259CFAA4E326 {

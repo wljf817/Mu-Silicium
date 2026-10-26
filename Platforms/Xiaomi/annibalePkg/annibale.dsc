@@ -83,3 +83,8 @@
   # ACPI Tables
   #
   #annibale/AcpiTables.inf
+
+  #
+  # ADSP Loader
+  #
+  annibalePkg/Drivers/AdspLoaderDxe/AdspLoaderDxe.inf
