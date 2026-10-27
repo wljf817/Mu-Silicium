@@ -16,6 +16,7 @@
 #include <Protocol/SimpleFileSystem.h>
 
 #include "AdspLoaderDxe.h"
+#include "PmicGlink.h"
 
 //
 // Global Variables
@@ -160,6 +161,9 @@ ShutdownAdsp (
 {
   EFI_STATUS Status;
 
+  // Stop talking to the ADSP
+  PmicGlinkStop ();
+
   // Shutdown ADSP
   Status = mPilProtocol->ShutdownPilImage (ADSP_SUBSYS_ID);
   if (EFI_ERROR (Status)) {
@@ -174,6 +178,7 @@ LoadAdsp (
   IN VOID     *Context)
 {
   EFI_STATUS              Status;
+  EFI_STATUS              GlinkStatus;
   EFI_PMIC_SCHG_PROTOCOL *PmicSchgProtocol;
 
   // Close Event
@@ -206,6 +211,9 @@ LoadAdsp (
     return;
   }
 
+  // Prepare the GLink FIFOs before the ADSP starts
+  GlinkStatus = PmicGlinkPrepare ();
+
   // Load ADSP
   Status = mPilProtocol->ProcessPilImage (ADSP_FW_NAME);
   if (EFI_ERROR (Status)) {
@@ -214,6 +222,11 @@ LoadAdsp (
   }
 
   DEBUG ((EFI_D_WARN, "%a: ADSP Loaded\n", __FUNCTION__));
+
+  // Send the Xiaomi Charger Config, the ADSP needs it for OTG
+  if (!EFI_ERROR (GlinkStatus)) {
+    PmicGlinkStart ();
+  }
 
   // Shutdown ADSP before the OS takes over
   Status = gBS->CreateEventEx (EVT_NOTIFY_SIGNAL, TPL_CALLBACK, ShutdownAdsp, NULL, &gEfiEventExitBootServicesGuid, &mExitBootServicesEvent);

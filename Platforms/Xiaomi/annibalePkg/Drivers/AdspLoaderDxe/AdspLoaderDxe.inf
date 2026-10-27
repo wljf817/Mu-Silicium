@@ -15,6 +15,10 @@
 [Sources]
   AdspLoaderDxe.c
   AdspLoaderDxe.h
+  ChargePump.c
+  ChargePump.h
+  PmicGlink.c
+  PmicGlink.h
 
 [Packages]
   MdePkg/MdePkg.dec
@@ -23,10 +27,13 @@
 
 [LibraryClasses]
   BaseLib
+  BaseMemoryLib
   DebugLib
+  IoLib
   MemoryAllocationLib
   UefiBootServicesTableLib
   UefiDriverEntryPoint
+  UefiLib
 
 [Guids]
   gEfiEndOfDxeEventGroupGuid
